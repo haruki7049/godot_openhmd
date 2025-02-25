@@ -26,6 +26,10 @@ if platform == "windows":
 if ARGUMENTS.get("use_llvm", "no") == "yes":
     env["CXX"] = "clang++"
 
+# Read PKG_CONFIG_PATH
+if 'PKG_CONFIG_PATH' in os.environ:
+    env['ENV']['PKG_CONFIG_PATH'] = os.environ['PKG_CONFIG_PATH']
+
 def add_sources(sources, directory):
     for file in os.listdir(directory):
         if file.endswith('.c'):
@@ -39,6 +43,7 @@ platform_dir = ''
 if platform == "osx":
     platform_dir = 'osx'
     godot_openhmd_path = godot_openhmd_path + 'osx/'
+    env.ParseConfig("pkg-config libudev --cflags --libs")
     env.Append(CCFLAGS = ['-g','-O3', '-arch', 'x86_64'])
     env.Append(LINKFLAGS = ['-arch', 'x86_64'])
     env.Append(LINKFLAGS=['-framework', 'Cocoa', '-framework', 'OpenGL', '-framework', 'IOKit'])
@@ -47,6 +52,7 @@ if platform == "osx":
 if platform == "linux":
     platform_dir = 'linux'
     godot_openhmd_path = godot_openhmd_path + 'linux/'
+    env.ParseConfig("pkg-config libudev --cflags --libs")
     env.Append(CCFLAGS = ['-fPIC', '-g','-O3'])
     env.Append(CXXFLAGS='-std=c++0x')
     env.Append(LINKFLAGS = ['-Wl,-R,\'$$ORIGIN\''])
@@ -54,6 +60,7 @@ if platform == "linux":
 if platform == "windows":
     platform_dir = 'win'
     godot_openhmd_path = godot_openhmd_path + 'win64/'
+    env.ParseConfig("pkg-config libudev --cflags --libs")
     if target == "debug":
         env.Append(CCFLAGS = ['-EHsc', '-D_DEBUG', '/MDd'])
     else:
