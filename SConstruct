@@ -183,4 +183,6 @@ env.Append(CPPPATH=['.', godot_headers_path, godot_glad_path])
 add_sources(sources, "src")
 
 library = env.SharedLibrary(target=godot_openhmd_path + 'godot_openhmd', source=sources)
+install = env.Install(dir="lib", source=library)
+env.Alias('install', install)
 Default(library)
