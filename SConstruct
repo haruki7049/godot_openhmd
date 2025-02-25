@@ -9,6 +9,7 @@ hidapi_path = ARGUMENTS.get("hidapi", os.getenv("HIDAPI_PATH", "hidapi/"))
 openhmd_path = ARGUMENTS.get("openhmd", os.getenv("OPENHMD_PATH", "OpenHMD/"))
 
 target = ARGUMENTS.get("target", "debug")
+prefix = ARGUMENTS.get("prefix", "./out")
 
 # platform= makes it in line with Godots scons file, keeping p for backwards compatibility
 platform = ARGUMENTS.get("p", "linux")
@@ -183,6 +184,6 @@ env.Append(CPPPATH=['.', godot_headers_path, godot_glad_path])
 add_sources(sources, "src")
 
 library = env.SharedLibrary(target=godot_openhmd_path + 'godot_openhmd', source=sources)
-install = env.Install(dir="lib", source=library)
+install = env.Install(target=prefix + '/lib', source=library)
 env.Alias('install', install)
 Default(library)
